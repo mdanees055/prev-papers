@@ -1,21 +1,15 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 function Login() {
 
   const [username,setUsername] = useState("")
   const [password,setPassword] = useState("")
+  const navigate = useNavigate()
 
   const handleLogin = (e)=>{
     e.preventDefault()
     alert("Login clicked")
-  }
-
-  const handleSignup = ()=>{
-    alert("Signup clicked")
-  }
-
-  const handleForgot = ()=>{
-    alert("Forgot password clicked")
   }
 
   return (
@@ -55,11 +49,17 @@ function Login() {
 
         <div className="buttons">
 
-          <button className="signup-btn" onClick={handleSignup}>
+          <button 
+            className="signup-btn"
+            onClick={()=>navigate("/signup")}
+          >
             Sign Up
           </button>
 
-          <button className="forgot-btn" onClick={handleForgot}>
+          <button 
+            className="forgot-btn"
+            onClick={()=>alert("Forgot Password Page")}
+          >
             Lost Password
           </button>
 
