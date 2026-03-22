@@ -9,7 +9,7 @@ function Login() {
 
   const handleLogin = (e)=>{
     e.preventDefault()
-    alert("Login clicked")
+    navigate("/dashboard")
   }
 
   return (
@@ -58,7 +58,7 @@ function Login() {
 
           <button 
             className="forgot-btn"
-            onClick={()=>alert("Forgot Password Page")}
+            onClick={()=>navigate("/forgot")}
           >
             Lost Password
           </button>
