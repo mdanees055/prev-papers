@@ -3,13 +3,38 @@ import { useNavigate } from "react-router-dom"
 
 function Login() {
 
-  const [username,setUsername] = useState("")
-  const [password,setPassword] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
-  const handleLogin = (e)=>{
+  const handleLogin = async (e)=>{
     e.preventDefault()
-    navigate("/dashboard")
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      })
+
+      const data = await res.json()
+
+      if(res.ok){
+        // store logged-in user
+        localStorage.setItem("user", JSON.stringify(data.user))
+
+        alert("Login Successful")
+        navigate("/dashboard")
+      } else {
+        alert(data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+      alert("Server error")
+    }
   }
 
   return (
@@ -17,7 +42,7 @@ function Login() {
 
       <div className="login-card">
 
-        <h2 className="title">Moodle LMS</h2>
+        <h2 className="title">University PYQ Portal</h2>
 
         <img 
           src="/logo.png"
@@ -32,6 +57,7 @@ function Login() {
             placeholder="Username"
             value={username}
             onChange={(e)=>setUsername(e.target.value)}
+            required
           />
 
           <input
@@ -39,6 +65,7 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e)=>setPassword(e.target.value)}
+            required
           />
 
           <button className="login-btn" type="submit">

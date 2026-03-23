@@ -5,19 +5,21 @@ function Signup() {
 
   const navigate = useNavigate()
 
-  const [form,setForm] = useState({
+  const [form, setForm] = useState({
     name:"",
     email:"",
     username:"",
     password:"",
-    confirmPassword:""
+    confirmPassword:"",
+    department:"",
+    semester:""
   })
 
   const handleChange = (e)=>{
-    setForm({...form,[e.target.name]:e.target.value})
+    setForm({...form, [e.target.name]: e.target.value})
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = async (e)=>{
     e.preventDefault()
 
     if(form.password !== form.confirmPassword){
@@ -25,12 +27,31 @@ function Signup() {
       return
     }
 
-    alert("Account Created Successfully!")
-    navigate("/") // redirect to login
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      })
+
+      const data = await res.json()
+
+      if(res.ok){
+        alert("Account Created Successfully")
+        navigate("/")
+      } else {
+        alert(data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+      alert("Server error")
+    }
   }
 
   return (
-
     <div className="signup-container">
 
       <div className="signup-card">
@@ -78,6 +99,28 @@ function Signup() {
             onChange={handleChange}
             required
           />
+
+          {/* Department */}
+          <select name="department" onChange={handleChange} required>
+            <option value="">Select Department</option>
+            <option value="CSE">Computer Science</option>
+            <option value="ECE">Electronics</option>
+            <option value="ME">Mechanical</option>
+            <option value="CE">Civil</option>
+          </select>
+
+          {/* Semester */}
+          <select name="semester" onChange={handleChange} required>
+            <option value="">Select Semester</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+            <option value="8">Semester 8</option>
+          </select>
 
           <button type="submit" className="create-btn">
             Create Account
