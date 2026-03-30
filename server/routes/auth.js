@@ -147,31 +147,33 @@ router.post("/verify-otp", (req, res) => {
         }
 
         db.run(
-          `INSERT INTO users (name, email, username, password)
-           VALUES (?, ?, ?, ?)`,
-          [
-            record.name,
-            record.email,
-            record.username,
-            record.password,
-          ],
-          function (insertErr) {
-            if (insertErr) {
-              console.error("CREATE USER AFTER OTP ERROR:", insertErr)
-              return res.status(500).json({ message: "Failed to create user" })
-            }
+  `INSERT INTO users (name, email, username, password, isVerified, role)
+   VALUES (?, ?, ?, ?, ?, ?)`,
+  [
+    record.name,
+    record.email,
+    record.username,
+    record.password,
+    0,
+    "student",
+  ],
+  function (insertErr) {
+    if (insertErr) {
+      console.error("CREATE USER AFTER OTP ERROR:", insertErr)
+      return res.status(500).json({ message: "Failed to create user" })
+    }
 
-            db.run("DELETE FROM otp_verifications WHERE email = ?", [email], (deleteErr) => {
-              if (deleteErr) {
-                console.error("DELETE OTP AFTER VERIFY ERROR:", deleteErr)
-              }
-            })
+    db.run("DELETE FROM otp_verifications WHERE email = ?", [email], (deleteErr) => {
+      if (deleteErr) {
+        console.error("DELETE OTP AFTER VERIFY ERROR:", deleteErr)
+      }
+    })
 
-            return res.status(201).json({
-              message: "Account verified and created successfully",
-            })
-          }
-        )
+    return res.status(201).json({
+      message: "Account verified and created successfully",
+    })
+  }
+)
       }
     )
   } catch (error) {
@@ -208,14 +210,16 @@ router.post("/login", (req, res) => {
         }
 
         return res.status(200).json({
-          message: "Login successful",
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            username: user.username,
-          },
-        })
+  message: "Login successful",
+  user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    isVerified: user.isVerified,
+    role: user.role,
+  },
+})
       }
     )
   } catch (error) {

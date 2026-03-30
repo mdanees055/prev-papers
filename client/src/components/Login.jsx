@@ -22,7 +22,12 @@ function Login() {
 
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(data.user))
-        navigate("/dashboard")
+
+        if (data.user.role === "admin") {
+          navigate("/admin")
+        } else {
+          navigate("/dashboard")
+        }
       } else {
         alert(data.message)
       }

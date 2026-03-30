@@ -3,13 +3,15 @@ require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
 const path = require("path")
+const fs = require("fs")
 
 require("./database")
 
 const app = express()
 
-console.log("EMAIL_USER:", process.env.EMAIL_USER)
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing")
+if (!fs.existsSync(path.join(__dirname, "uploads"))) {
+  fs.mkdirSync(path.join(__dirname, "uploads"))
+}
 
 app.use(cors())
 app.use(express.json())
@@ -20,6 +22,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/auth", require("./routes/auth"))
+app.use("/api/admin", require("./routes/admin"))
 
 const PORT = process.env.PORT || 5000
 

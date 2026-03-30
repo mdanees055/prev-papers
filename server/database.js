@@ -15,7 +15,9 @@ db.serialize(() => {
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       username TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      password TEXT NOT NULL,
+      isVerified INTEGER DEFAULT 0,
+      role TEXT DEFAULT 'student'
     )
   `)
 
@@ -28,6 +30,19 @@ db.serialize(() => {
       password TEXT NOT NULL,
       otp TEXT NOT NULL,
       expiresAt INTEGER NOT NULL
+    )
+  `)
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS pyqs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      department TEXT NOT NULL,
+      semester TEXT NOT NULL,
+      year TEXT NOT NULL,
+      filePath TEXT NOT NULL,
+      uploadedBy TEXT
     )
   `)
 })
