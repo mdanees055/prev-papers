@@ -5,7 +5,7 @@ This project contains the database schema for storing previous year question pap
 
 ## Tables
 - Subject: Stores subject details
-- Paper: Stores exam papers with year and type
+- Paper: Stores exam papers with year and type(mid,sem)
 
 ## Features
 - Foreign key relationship between Subject and Paper
