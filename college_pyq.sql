@@ -18,6 +18,15 @@ CREATE TABLE Paper (
     FOREIGN KEY (subject_code) REFERENCES Subject(subject_code)
 );
 
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE,
+    password VARCHAR(255),
+    name VARCHAR(100),
+    role VARCHAR(20) DEFAULT 'student'
+);
+
+
 INSERT INTO Subject (subject_code, subject_name, degree, branch, semester)
 VALUES
 ('BECSE0O011','Data Mining and Warehousing','B.Tech','CSE',6),

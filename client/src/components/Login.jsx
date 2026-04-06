@@ -41,8 +41,9 @@ function Login() {
       <div className="login-card">
         <h2 className="title">University PYQ Portal</h2>
 
-        <img src="/logo.png" alt="university logo" className="logo" />
-
+        {/* Logo from public folder */}
+        <img src="/logocuj.jpg" alt="University Logo" className="logo" />
+        
         <form onSubmit={handleLogin}>
           <input
             type="text"
@@ -70,8 +71,9 @@ function Login() {
             Sign Up
           </button>
 
+          {/* Renamed button */}
           <button type="button" className="forgot-btn" onClick={() => navigate("/forgot")}>
-            Lost Password
+            Forgot Password
           </button>
         </div>
       </div>

@@ -1,65 +1,72 @@
-import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+// src/components/PyqPortal.jsx
+import { useState, useEffect } from "react";
 
-function Dashboard() {
+function PyqPortal() {
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [papers, setPapers] = useState([]);
 
-  const navigate = useNavigate()
+  // Fetch subjects on mount
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/subjects")
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") setSubjects(data.data);
+      })
+      .catch(err => console.error("Error fetching subjects:", err));
+  }, []);
 
-  // Dummy user data (later connect with backend)
-  const [user] = useState({
-    name: "John Doe",
-    department: "Computer Science"
-  })
-
-  const [semester, setSemester] = useState("")
-
-  const handleLogout = ()=>{
-    navigate("/")
-  }
+  // Fetch papers when a subject is selected
+  useEffect(() => {
+    if (!selectedSubject) return;
+    fetch(`http://127.0.0.1:5000/papers?subject=${selectedSubject}`)
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") setPapers(data.data);
+      })
+      .catch(err => console.error("Error fetching papers:", err));
+  }, [selectedSubject]);
 
   return (
-    <div className="dashboard-container">
+    <div className="pyq-portal">
+      <h3>Previous Year Question Papers</h3>
 
-      {/* Top Navbar */}
-      <div className="navbar">
-        <h2>University PYQ Portal</h2>
+      {/* Subject selector */}
+      <label>Select Subject:</label>
+      <select
+        value={selectedSubject}
+        onChange={(e) => setSelectedSubject(e.target.value)}
+      >
+        <option value="">-- Select Subject --</option>
+        {subjects.map(sub => (
+          <option key={sub.subject_code} value={sub.subject_code}>
+            {sub.subject_name}
+          </option>
+        ))}
+      </select>
 
-        <div className="user-info">
-          <span>{user.name}</span>
-          <button onClick={handleLogout}>Logout</button>
+      {/* Papers list */}
+      {papers.length > 0 && (
+        <div className="papers-list">
+          <h4>Papers for selected subject:</h4>
+          <ul>
+            {papers.map(paper => (
+              <li key={paper.paper_id}>
+                {paper.exam_type} ({paper.year}){" "}
+                <a 
+                  href={`http://127.0.0.1:5000/download/${paper.pdf_path.split("/")[1]}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Download PDF
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="dashboard-content">
-
-        <h3>Welcome, {user.name} 👋</h3>
-
-        <div className="info-box">
-          <p><strong>Department:</strong> {user.department}</p>
-
-          <label>Select Semester:</label>
-
-          <select 
-            value={semester}
-            onChange={(e)=>setSemester(e.target.value)}
-          >
-            <option value="">-- Select Semester --</option>
-            <option value="1">Semester 1</option>
-            <option value="2">Semester 2</option>
-            <option value="3">Semester 3</option>
-            <option value="4">Semester 4</option>
-            <option value="5">Semester 5</option>
-            <option value="6">Semester 6</option>
-            <option value="7">Semester 7</option>
-            <option value="8">Semester 8</option>
-          </select>
-        </div>
-
-      </div>
-
+      )}
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default PyqPortal;
